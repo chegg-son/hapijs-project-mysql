@@ -22,7 +22,6 @@ const customResponse = (statusCode, data, message, h) => {
         message: message,
         datas: data
     }
-
     return h.response(oke).code(statusCode)
 }
 

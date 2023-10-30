@@ -1,3 +1,4 @@
+/* eslint-disable space-before-function-paren */
 /* eslint-disable no-const-assign */
 /* eslint-disable no-undef */
 /* eslint-disable indent */
@@ -40,25 +41,28 @@ window.addEventListener('load', () => {
 
     const updateInterval = setInterval(updatingTheDot, 500)
 
-    // Simulate a delay using setTimeout (you can adjust the delay time)
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('/getData1')
+            const data1Element = document.getElementById('data1')
+            const data2Element = document.getElementById('data2')
+            const data3Element = document.getElementById('data3')
+            console.log(response.data)
+            data1Element.textContent = response.data.data1
+            data2Element.textContent = response.data.data2
+            data3Element.textContent = response.data.data3
+
+            // Bagian di bawah ini menjadikan style display diset ke none
+            // sehingga elemen tersembunyikan setelah loading selesai
+            loadingElement.style.display = 'none'
+        } catch (e) {
+            console.error('Error:', e)
+            loadingElement.textContent = 'Error loading data. Please try again later.'
+        }
+    }
+
     setTimeout(() => {
         clearInterval(updateInterval)
-        axios.get('/getData1')
-            .then((response) => {
-                const data1Element = document.getElementById('data1')
-                data1Element.textContent = response.data.data1
-                const data2Element = document.getElementById('data2')
-                data2Element.textContent = response.data.data2
-                const data3Element = document.getElementById('data3')
-                data3Element.textContent = response.data.data3
-
-                // bagian di bawah ini menjadikan style display diset ke none
-                // sehingga element tersembunyikan setelah loading selesai
-                loadingElement.style.display = 'none'
-            })
-            .catch((e) => {
-                console.error('Error:', e)
-                loadingElement.textContent = 'Error loading data. Please try again later.'
-            })
+        fetchData()
     }, 2000)
 })

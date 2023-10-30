@@ -8,7 +8,6 @@ const testRoute = require('./src/routes')
 const Path = require('path')
 const Inert = require('@hapi/inert')
 const Vision = require('@hapi/vision')
-// const db = require('./conn')
 
 const server = Hapi.server({
     host: 'localhost',
@@ -19,11 +18,6 @@ const server = Hapi.server({
         }
     }
 })
-
-// db.connect(e => {
-//     if (e) throw e
-//     console.log('DB BERHASILLL')
-// })
 
 async function start() {
     await server.register({

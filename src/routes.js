@@ -1,10 +1,8 @@
 /* eslint-disable no-useless-catch */
 /* eslint-disable no-trailing-spaces */
-
-// const db = require('../conn')
+/* eslint-disable indent */
 const customResponse = require('./response')
 
-/* eslint-disable indent */
 const testRoute = [
     {
         // bagian render HTML dari GET "/"
@@ -38,35 +36,39 @@ const testRoute = [
         }
     },
     {
+        // bagian untuk akses file main.js 
         method: 'GET',
-        path: '/public/js/{path*}',
+        path: '/{param*}',
         handler: {
-            file: 'js/main.js'
+            directory: {
+                path: '.',
+                redirectToSlash: true
+            }
         }
     },
     {
+        // untuk akses get from table todo mysql
         method: 'GET',
         path: '/getDatabase',
         handler: async (req, res) => {
-            const sql = 'SELECT * FROM todo_list'
-            return new Promise((resolve, reject) => {
-                req.app.db.query(sql, (e, result) => {
-                    if (e) {
-                        reject(e)
-                    } else {
-                        console.log(result)
-                        resolve(customResponse(404, result, 'Mengambil data dari table todo', res))
-                    }
-                })
+            const sql = 'SELECT * FROM `todo_list`'
+            try {
+                const result = await req.app.db.query(sql)
+                console.log(result)
+                return customResponse(200, result, 'Mengambil data dari database', res)
+            } catch (error) {
+                throw error
+            }
+        }
+    },
+    {
+        // bagian show.ejs
+        method: 'GET',
+        path: '/show',
+        handler: (request, h) => {
+            return h.view('show', {
+                title: 'Percobaan EJS dengan API'
             })
-            // try {
-            //     const result = await req.app.db.query(sql)
-            //     console.log(result)
-
-            //     return customResponse(200, result, 'get db', res)
-            // } catch (error) {
-            //     throw error
-            // }
         }
     }
 ]
